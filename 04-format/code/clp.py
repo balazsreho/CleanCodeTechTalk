@@ -52,13 +52,13 @@ class CommandLineProgram:
         """
         Check if a new bank name is valid.
         """
-        def is_name_too_long():
+        def is_name_short_enough():
             return True if len(name_to_check) >= 12 else False
 
         def is_name_only_letter():
             return True if name_to_check.isalpha() else False
 
-        return True if not is_name_too_long() and is_name_only_letter() else False
+        return True if is_name_short_enough() and is_name_only_letter() else False
 
     def run(self):
         """
@@ -96,22 +96,20 @@ class CommandLineProgram:
         """
         Print all users in ordered list format.
         """
-        i = 0
-        for item in self.users:
+        for i, item in enumerate(self.users):
             print("{}. {}".format(i, item.name))
-            i = i + 1
 
-    def select_a_user(self):
+    def prompt_user_selection(self):
         """
         Print and select a user from already added users.
         :return: User object which is selected.
         """
         self.print_users()
-        user_input = self.input_for_user()
+        user_input = self.input_for_user_selection()
         currently_selected = self.users[int(user_input)]
         return currently_selected
 
-    def input_for_user(self):
+    def input_for_user_selection(self):
         """
         Ask for input to select user from users' list.
         :return: Number of selection.
@@ -127,7 +125,7 @@ class CommandLineProgram:
 
     def select_user_and_add_transaction(self):
         """
-        Select a user and add a custom amount of transaction.
+        Select a user and add a transaction with custom amount.
         """
         def add_transaction(to_user):
             print("Amount of transaction:")
@@ -136,7 +134,7 @@ class CommandLineProgram:
             to_user.add_transaction(new_transaction)
 
         try:
-            selected_user = self.select_a_user()
+            selected_user = self.prompt_user_selection()
             add_transaction(selected_user)
         except ValueError:
             print("No changes made.")
@@ -151,7 +149,7 @@ class CommandLineProgram:
         Print report for an already added user.
         """
         try:
-            selected_user = self.select_a_user()
+            selected_user = self.prompt_user_selection()
             self.print_all_transaction(selected_user)
         except ValueError:
             print("No changes made.")
